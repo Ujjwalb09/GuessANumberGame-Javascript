@@ -17,42 +17,56 @@ console.log(document.querySelector('.guess').value);
 
 //logic to generate the random number
 
-document.querySelector('.number').value = Math.trunc(Math.random() * 20 + 1);
+let randomNumber = Math.trunc(Math.random() * 20) + 1;
 
-let randomNumber = document.querySelector('.number').value;
+document.querySelector('.number').value = randomNumber;
 
 console.log(randomNumber);
-
+let score = 20;
+let highScore = 0;
 //Applying event listner on check button
 document.querySelector('.check').addEventListener('click', function () {
   const guess = Number(document.querySelector('.guess').value); //value that we are taking in the input
 
-  if (guess > randomNumber && guess !== 0) {
-    document.querySelector('.message').textContent = 'Number too large';
+  if (score > 1) {
+    //when guess is greater than number
+    if (guess > randomNumber && guess !== 0) {
+      document.querySelector('.message').textContent = 'Number too large';
 
-    //decreasing the score on every incorrect answer
-    document.querySelector('.score').textContent =
-      document.querySelector('.score').textContent - 1;
-  } else if (guess < randomNumber && guess !== 0) {
-    document.querySelector('.message').textContent = 'Number too small';
+      //decreasing the score on every incorrect answer
+      score--;
+      document.querySelector('.score').textContent = score;
 
-    //decreasing the score on every incorrect answer
-    document.querySelector('.score').textContent =
-      document.querySelector('.score').textContent - 1;
-  } else if (guess == randomNumber) {
-    document.querySelector('.message').textContent =
-      'Congratulations, you guessed the right number';
+      //when guess is less than number
+    } else if (guess < randomNumber && guess !== 0) {
+      document.querySelector('.message').textContent = 'Number too small';
 
-    document.querySelector('.number').textContent = randomNumber;
-    //setting the highscore as current score when guess is correct
+      //decreasing the score on every incorrect answer
+      score--;
+      document.querySelector('.score').textContent = score;
 
-    if (
-      document.querySelector('.score').textContent >
-      document.querySelector('.highscore').textContent
-    ) {
-      document.querySelector('.highscore').textContent =
-        document.querySelector('.score').textContent;
+      //when player wins the game
+    } else if (guess === randomNumber) {
+      document.querySelector('.message').textContent =
+        'Congratulations, you guessed the right number';
+
+      //changing background color to green when player wins the game
+      document.querySelector('body').style.backgroundColor = '#60b347';
+
+      document.querySelector('.number').style.width = '30rem';
+
+      document.querySelector('.number').textContent = randomNumber;
+
+      //setting the highscore as current score when guess is correct
+      if (score > highScore) {
+        highScore = score;
+        document.querySelector('.highscore').textContent = score;
+      }
     }
+  } else {
+    document.querySelector('.message').textContent = 'You lost the game 😭';
+
+    document.querySelector('.score').textContent = 0;
   }
 
   //if input is empty or zero
@@ -69,11 +83,17 @@ document.querySelector('.again').addEventListener('click', function () {
   randomNumber = document.querySelector('.number').value;
   console.log(randomNumber);
 
-  document.querySelector('.guess').value = 0;
+  document.querySelector('body').style.backgroundColor = '#000000';
+
+  document.querySelector('.number').style.width = '15rem';
+
+  document.querySelector('.guess').value = '';
 
   document.querySelector('.number').textContent = '?';
 
   document.querySelector('.message').textContent = 'Start guessing...';
 
   document.querySelector('.score').textContent = '20';
+
+  score = 20;
 });
